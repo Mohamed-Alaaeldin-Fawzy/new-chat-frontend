@@ -1,37 +1,40 @@
-interface ApiOptions {
-  method: 'GET' | 'POST' | 'PUT' | 'DELETE';
-  body?: any;
-  headers?: HeadersInit;
-}
+import { ApiOptions } from '../types';
 
-const getAuthHeaders = () => {
+// Function to get authentication headers
+const getAuthHeaders = (): Record<string, string> => {
   const token = localStorage.getItem('token');
-  return token ? { Authorization: `${token}` } : {};
+  return token ? { Authorization: `Bearer ${token}` } : {};
 };
 
-export const handleApi = async (url: string, options: ApiOptions) => {
-  const { method, body, headers } = options;
-  const authHeaders = getAuthHeaders();
-  const response = await fetch(url, {
-    method,
-    headers: {
-      'Content-Type': 'application/json',
-      ...headers,
-      ...(authHeaders.Authorization && {
-        Authorization: `${authHeaders.Authorization}`,
+export const handleApi = async (
+  url: string,
+  { method, body, headers = {} }: ApiOptions
+): Promise<any> => {
+  try {
+    const authHeaders = getAuthHeaders();
+
+    const fetchOptions: RequestInit = {
+      method,
+      headers: new Headers({
+        'Content-Type': 'application/json',
+        ...authHeaders,
+        ...headers,
       }),
-    },
-    body: method !== 'GET' ? JSON.stringify(body) : undefined,
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.message || 'Something went wrong');
+    };
+
+    if (method !== 'GET' && body !== undefined) {
+      fetchOptions.body = JSON.stringify(body);
+    }
+
+    const response = await fetch(url, fetchOptions);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || 'Something went wrong');
+    }
+
+    return data;
+  } catch (error) {
+    throw error;
   }
-  if (
-    url === `${process.env.NEXT_PUBLIC_API_URL}/auth/login` ||
-    url === `${process.env.NEXT_PUBLIC_API_URL}/auth/register`
-  ) {
-    localStorage.setItem('token', data.token);
-  }
-  return data;
 };

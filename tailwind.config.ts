@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from 'tailwindcss';
 
 const config: Config = {
   content: [
@@ -8,6 +8,14 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      height: {
+        max: '90vh',
+      },
+      colors: {
+        primary: '#EFEFEF',
+        secondary: '#E6F1F3',
+        tertiary: '#F3F7F6',
+      },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic':
@@ -15,6 +23,6 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
-}
-export default config
+  plugins: [require('tailwind-scrollbar')],
+};
+export default config;

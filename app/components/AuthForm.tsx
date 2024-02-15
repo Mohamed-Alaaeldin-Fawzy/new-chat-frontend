@@ -1,15 +1,26 @@
 'use client';
 import { useState } from 'react';
 import Input from './Input';
-import Button from './Button';
 import { handleApi } from '@/helpers/handleApi';
 import { useRouter } from 'next/navigation';
 import { handleValidation } from '@/helpers/handleValidation';
+import Form from './Form';
+import { AuthFormDataTypes } from '@/types';
+import { getAuthFormInputFields } from '../authFormData';
+import classNames from 'classnames';
+
 const url = process.env.NEXT_PUBLIC_API_URL;
+
 const AuthForm = () => {
   const [variant, setVariant] = useState('REGISTER');
+  const [inputErrors, setInputErrors] = useState({
+    name: '',
+    email: '',
+    password: '',
+    global: '',
+  });
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<AuthFormDataTypes>({
     name: '',
     email: '',
     password: '',
@@ -25,138 +36,96 @@ const AuthForm = () => {
     const { isValid, errors } = await handleValidation(variant, formData);
 
     if (!isValid) {
-      // TODO : Do something with the errors array
+      // @ts-ignore
+      setInputErrors(errors);
       return;
     }
 
     setIsLoading(true);
 
     try {
-      await handleApi(`${url}/auth/${variant.toLowerCase()}`, {
+      const data = await handleApi(`${url}/auth/${variant.toLowerCase()}`, {
         method: 'POST',
         body: { email, password, ...(variant === 'REGISTER' && { name }) },
       });
+      localStorage.setItem('token', data.token);
       // redirect to /chats
       router.push('/chats');
     } catch (error) {
-      // Handle error
       console.log(error);
+      // @ts-ignore
+      setInputErrors({ global: error.message });
     }
 
     setIsLoading(false);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.id === 'email') {
-      setFormData({ ...formData, email: e.target.value });
-    }
-    if (e.target.id === 'name') {
-      setFormData({ ...formData, name: e.target.value });
-    }
-    if (e.target.id === 'password') {
-      setFormData({ ...formData, password: e.target.value });
-    }
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
+  // "mx-auto mt-8 w-full max-w-md self-center "
   return (
     <div
-      className="
-        mx-auto
-        mt-8
-        w-full
-        max-w-md
-        self-center
-        "
+      className={classNames([
+        'mx-auto',
+        'mt-8',
+        'w-full',
+        'max-w-md',
+        'self-center',
+      ])}
     >
-      <h2
-        className="
-       mb-6
-       text-center
-       text-3xl
-       font-bold
-       tracking-tight
-       text-zinc-200
-       "
-      >
+      <h2 className={classNames(['text-3xl', 'font-bold', 'text-center'])}>
         {variant === 'LOGIN' ? 'Sign in' : 'Register'}
       </h2>
       <div
-        className="
-      bg-zinc-950
-        px-4
-        py-8
-        shadow-2xl
-        sm:rounded-lg
-        sm:px-10
-        "
+        className={classNames([
+          'mt-4',
+          `bg-white`,
+          'p-8',
+          'rounded-lg',
+          'shadow-lg',
+        ])}
       >
-        <form className="space-y-6" onSubmit={handleSubmit}>
-          {variant === 'REGISTER' && (
-            <Input
-              value={name}
-              id="name"
-              label="Name"
-              disabled={isLoading}
-              onChange={handleChange}
-            />
-          )}
-          <Input
-            value={email}
-            id="email"
-            label="Email"
-            type="email"
-            disabled={isLoading}
-            onChange={handleChange}
-          />
-          <Input
-            value={password}
-            id="password"
-            label="Password"
-            type="password"
-            disabled={isLoading}
-            onChange={handleChange}
-          />
-          <div
-            className="
-            flex
-            items-center
-            justify-between
-            "
-          ></div>
-          <Button fullWidth type="submit" disabled={isLoading}>
-            {variant === 'LOGIN' ? 'Sign in' : 'Register'}
-          </Button>
-        </form>
-        <div className="mt-6">
-          <div className="relative">
-            <div
-              className="
-              absolute
-              inset-0
-              flex
-              items-center
-              "
-            >
-              <div
-                className="
-              w-full
-              border-t
-              border-zinc-300
-              pb-4
-              "
+        <Form
+          onSubmit={handleSubmit}
+          buttonText={variant === 'LOGIN' ? 'Sign in' : 'Register'}
+          // disabled={} well be implemented with validation
+          isLoading={isLoading}
+        >
+          {getAuthFormInputFields(variant).map(({ id, label, type }) => (
+            <div key={id}>
+              <Input
+                id={id}
+                label={label}
+                type={type}
+                value={formData[id]}
+                disabled={isLoading}
+                onChange={handleChange}
               />
+              <p className="mt-2 text-sm font-semibold text-red-500">
+                {/* @ts-ignore */}
+                {inputErrors[id]}
+              </p>
             </div>
-          </div>
-        </div>
+          ))}
+        </Form>
+        {inputErrors.global && (
+          <p className="my-4 text-sm font-semibold text-red-500">
+            {inputErrors.global}
+          </p>
+        )}
         <div
-          className="
-        mt-6
-        flex
-        justify-center
-        gap-2
-        px-2
-        text-sm
-        text-zinc-400
-        "
+          className={classNames([
+            'mt-4',
+            'text-center',
+            'text-sm',
+            'text-gray-500',
+            'flex',
+            'justify-center',
+            'border-t-[1px]',
+            'border-gray-200',
+            'py-4',
+          ])}
         >
           <div>
             {variant === 'LOGIN'
@@ -164,7 +133,7 @@ const AuthForm = () => {
               : 'Already have an account?'}
           </div>
           <div
-            className="cursor-pointer text-blue-500 underline"
+            className="ml-2 cursor-pointer text-blue-500 underline"
             onClick={() =>
               setVariant(variant === 'LOGIN' ? 'REGISTER' : 'LOGIN')
             }

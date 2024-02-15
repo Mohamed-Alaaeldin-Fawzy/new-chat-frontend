@@ -1,17 +1,7 @@
 'use client';
 import { handleApi } from '@/helpers/handleApi';
 import React, { createContext, useContext, useState, useEffect } from 'react';
-
-interface User {
-  name: string;
-  email: string;
-  token?: string;
-}
-
-interface AuthContextType {
-  user: User | null;
-  setUser: React.Dispatch<React.SetStateAction<User | null>>;
-}
+import { User, AuthContextType } from '@/types';
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -30,7 +20,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         {
           method: 'GET',
           headers: {
-            Authorization: token || '',
+            Authorization: `Bearer ${token}` || '',
           },
         }
       );

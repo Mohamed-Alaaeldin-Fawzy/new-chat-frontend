@@ -49,7 +49,6 @@ export const handleValidation = async (
       }, {});
       return { isValid: false, errors };
     }
-    console.error(err);
     return {
       isValid: false,
       errors: { global: 'An unexpected error occurred' },

@@ -1,6 +1,6 @@
-import Image from 'next/image'
-import AuthImage from '@/public/auth.svg'
-import AuthForm from './components/AuthForm'
+import Image from 'next/image';
+import AuthImage from '@/public/auth.svg';
+import AuthForm from './components/AuthForm';
 
 export default function Home() {
   return (
@@ -10,19 +10,18 @@ export default function Home() {
             min-h-screen
             flex-col
             justify-center
-            bg-zinc-900
+            bg-tertiary
             px-8
             py-12 align-middle
-            text-zinc-100
             sm:px-6
             md:flex-row-reverse"
     >
       <Image
         src={AuthImage}
-        alt="Auth image"
+        alt="Login image"
         className="hidden w-full max-w-md sm:mx-auto md:block "
       />
       <AuthForm />
     </main>
-  )
+  );
 }

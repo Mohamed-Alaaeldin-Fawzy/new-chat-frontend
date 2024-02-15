@@ -1,7 +1,5 @@
 'use client';
-
 import React from 'react';
-
 import { FaSpinner } from 'react-icons/fa6';
 
 interface ButtonProps {
@@ -12,6 +10,7 @@ interface ButtonProps {
   secondary?: boolean;
   danger?: boolean;
   disabled?: boolean;
+  isLoading?: boolean;
 }
 const Button: React.FC<ButtonProps> = ({
   type,
@@ -21,6 +20,7 @@ const Button: React.FC<ButtonProps> = ({
   secondary,
   danger,
   disabled,
+  isLoading,
 }) => {
   return (
     <button
@@ -35,12 +35,12 @@ const Button: React.FC<ButtonProps> = ({
             py-2
             text-sm
             font-semibold
+            text-white
             focus-visible:outline
             focus-visible:outline-2
             focus-visible:outline-offset-2
-            ${disabled && 'cursor-not-allowed opacity-50'},
+            ${disabled && 'cursor-not-allowed opacity-50'}
             ${fullWidth && 'w-full'}
-            ${secondary ? 'text-gray-900' : 'text-white'},
             ${
               danger &&
               'bg-rose-500 hover:bg-rose-600 focus-visible:outline-rose-600'
@@ -53,7 +53,7 @@ const Button: React.FC<ButtonProps> = ({
             `}
     >
       {children}
-      {disabled && <FaSpinner className="ml-2 mt-1 animate-spin" />}
+      {isLoading && <FaSpinner className="ml-2 mt-1 animate-spin" />}
     </button>
   );
 };
