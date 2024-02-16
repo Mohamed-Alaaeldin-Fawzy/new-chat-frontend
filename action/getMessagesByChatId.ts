@@ -6,7 +6,7 @@ export const getMessagesByChatId = async (chatId: string) => {
     {
       method: 'GET',
       headers: {
-        Authorization: localStorage.getItem('token') || '',
+        Authorization: `Bearer ${localStorage.getItem('token')}` || '',
       },
     }
   );
