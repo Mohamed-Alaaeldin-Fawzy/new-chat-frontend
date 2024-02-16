@@ -26,7 +26,7 @@ const Chat = ({
   };
   return (
     <div
-      className="relative flex max-w-80 cursor-pointer items-center justify-between p-4 align-middle "
+      className="flex w-full cursor-pointer items-start justify-start p-4 "
       onClick={handleClick}
     >
       <div className="mr-4 rounded-full bg-gray-200 p-4">

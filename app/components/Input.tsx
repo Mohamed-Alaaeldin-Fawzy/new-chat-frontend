@@ -14,7 +14,6 @@ const Input: React.FC<InputProps> = ({
   id,
   label,
   type,
-  required,
   disabled,
   onChange,
   value,

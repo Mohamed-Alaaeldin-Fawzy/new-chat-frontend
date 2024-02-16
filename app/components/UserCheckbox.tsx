@@ -9,14 +9,14 @@ const UserCheckbox = ({
   handleUserSelection: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }) => {
   return (
-    <label className="relative m-4 flex cursor-pointer items-center justify-center">
+    <label className="relative m-4 flex items-center justify-center">
       <input
         type="checkbox"
         className="peer absolute h-full w-full opacity-0"
         onChange={handleUserSelection}
         value={user.id}
       />
-      <div className=" w-full rounded-2xl border peer-checked:bg-blue-500 peer-checked:text-white">
+      <div className="z-10 h-full w-full cursor-pointer rounded-2xl border peer-checked:bg-blue-500 peer-checked:text-white">
         <User name={user.name} email={user.email} />
       </div>
     </label>

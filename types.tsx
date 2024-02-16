@@ -20,6 +20,8 @@ export interface Chat {
 export interface AuthContextType {
   user: User | null;
   setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  setToken: React.Dispatch<React.SetStateAction<string | null>>;
+  token: string | null;
 }
 
 export interface ApiOptions {

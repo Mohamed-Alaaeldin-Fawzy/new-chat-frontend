@@ -9,9 +9,9 @@ const ModalForm = ({ isOpen, onClose, children }: ModalFormProps) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 overflow-auto bg-black bg-opacity-40">
+    <div className="fixed inset-0 z-20 overflow-auto bg-black bg-opacity-40">
       <div className="flex min-h-screen items-center justify-center p-4 text-center">
-        <div className="relative w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
+        <div className="relative z-50 w-full max-w-md transform overflow-hidden rounded-2xl bg-white p-6 text-left align-middle shadow-xl transition-all">
           <button
             className="absolute right-3 top-3 rounded-md p-1.5 text-black hover:bg-gray-200"
             onClick={onClose}

@@ -1,4 +1,3 @@
-// components/Form.jsx or Form.tsx if using TypeScript
 import React from 'react';
 import Button from './Button';
 
@@ -18,7 +17,7 @@ const Form = ({
   isLoading,
 }: FormProps) => {
   return (
-    <form className="space-y-6" onSubmit={onSubmit}>
+    <form className="cursor-auto space-y-6" onSubmit={onSubmit}>
       {children}
       <Button fullWidth disabled={disabled} isLoading={isLoading}>
         {buttonText || 'Submit'}

@@ -8,18 +8,24 @@ import Form from './Form';
 import { AuthFormDataTypes } from '@/types';
 import { getAuthFormInputFields } from '../authFormData';
 import classNames from 'classnames';
+import { useAuth } from '@/context/AuthContext';
 
 const url = process.env.NEXT_PUBLIC_API_URL;
 
 const AuthForm = () => {
-  const [variant, setVariant] = useState('REGISTER');
+  const { setToken } = useAuth();
+
+  const [variant, setVariant] = useState<'LOGIN' | 'REGISTER'>('REGISTER');
+
   const [inputErrors, setInputErrors] = useState({
     name: '',
     email: '',
     password: '',
     global: '',
   });
+
   const [isLoading, setIsLoading] = useState(false);
+
   const [formData, setFormData] = useState<AuthFormDataTypes>({
     name: '',
     email: '',
@@ -48,9 +54,9 @@ const AuthForm = () => {
         method: 'POST',
         body: { email, password, ...(variant === 'REGISTER' && { name }) },
       });
+
       localStorage.setItem('token', data.token);
-      // redirect to /chats
-      router.push('/chats');
+      setToken(data.token);
     } catch (error) {
       console.log(error);
       // @ts-ignore
@@ -63,7 +69,6 @@ const AuthForm = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  // "mx-auto mt-8 w-full max-w-md self-center "
   return (
     <div
       className={classNames([

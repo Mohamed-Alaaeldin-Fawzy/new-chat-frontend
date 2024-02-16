@@ -1,6 +1,5 @@
 import { ApiOptions } from '../types';
 
-// Function to get authentication headers
 const getAuthHeaders = (): Record<string, string> => {
   const token = localStorage.getItem('token');
   return token ? { Authorization: `Bearer ${token}` } : {};

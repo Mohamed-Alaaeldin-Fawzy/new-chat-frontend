@@ -6,12 +6,15 @@ import { MdSend } from 'react-icons/md';
 import { sendMessage } from '@/action/sendMessage';
 import { useAuth } from '@/context/AuthContext';
 import { getMessagesByChatId } from '@/action/getMessagesByChatId';
+import { FaArrowLeft } from 'react-icons/fa';
+import { useRouter } from 'next/navigation';
 
 const UserChat = () => {
   const { chat } = useCurrentChat();
   const [messageBody, setMessageBody] = useState('');
   const [chatMessages, setChatMessages] = useState<any[]>([]);
   const { user } = useAuth();
+  const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,7 +43,15 @@ const UserChat = () => {
 
   return (
     <>
-      <div className=" flex w-full justify-start rounded-tr-2xl border-b-[1px] border-secondary bg-white p-6">
+      {/* chat head (name , more info if available) */}
+      <div className=" flex h-auto w-full items-center justify-start rounded-tr-2xl border-b-[1px] border-secondary bg-white p-6">
+        {/* Back button */}
+        <button
+          className="mr-4 block cursor-pointer text-xl md:hidden"
+          onClick={() => router.back()}
+        >
+          <FaArrowLeft size={24} />
+        </button>
         {chat && (
           <Chat name={chat.name} id={chat.id} usersIds={chat.usersIds} />
         )}
@@ -68,7 +79,7 @@ const UserChat = () => {
         <input
           type="text"
           placeholder="Type a message..."
-          className="flex-1 rounded-l-lg border border-r-0 border-gray-300 p-2"
+          className="flex-1 rounded-l-lg border border-r-0 border-gray-300 p-2 outline-none"
           value={messageBody}
           onChange={(e) => setMessageBody(e.target.value)}
         />
