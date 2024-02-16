@@ -4,6 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { ChatProvider } from '@/context/ChatContext';
 import { ProtectedRoute } from './ProtectedRoute';
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {

@@ -7,6 +7,7 @@ import { getUserChats } from '@/action/getUserChats';
 import { User as UserType, Chat as ChatType } from '@/types';
 import SideBarHeader from './SideBarHeader';
 import Chat from './Chat';
+import SidebarSkeleton from './SidebarSkeleton';
 
 const Sidebar = () => {
   const { user } = useAuth();
@@ -26,7 +27,7 @@ const Sidebar = () => {
     if (user?.id) {
       fetchUsers();
     }
-  }, [user?.id]);
+  }, [user]);
 
   useEffect(() => {
     const fetchUserChats = async () => {
@@ -43,16 +44,16 @@ const Sidebar = () => {
     }
   }, [user]);
 
-  return (
+  return user ? (
     <div className="relative h-full rounded-l-2xl border-r-[1px] border-gray-200 bg-white">
-      {user && user && <SideBarHeader users={users} currentUser={user!} />}
+      <SideBarHeader users={users} currentUser={user!} />
       <div className="h-[77%] overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-900">
         {userChats &&
           userChats.length > 0 &&
           userChats.map((chat) => (
             <div
               key={chat.id}
-              className="m-4 flex flex-col items-center rounded-xl hover:bg-gray-200"
+              className="m-4 flex flex-col items-start rounded-xl hover:bg-gray-200"
             >
               <Chat name={chat.name} id={chat.id} usersIds={chat.usersIds} />
             </div>
@@ -61,6 +62,10 @@ const Sidebar = () => {
       <div className="absolute bottom-0 left-0 right-0  border-t-[1px] border-gray-200 p-4">
         {user && <User name={user.name} email={user?.email} />}
       </div>
+    </div>
+  ) : (
+    <div>
+      <SidebarSkeleton />
     </div>
   );
 };

@@ -8,6 +8,8 @@ import { User as UserType } from '@/types';
 import { handleApi } from '@/helpers/handleApi';
 import UserCheckbox from './UserCheckbox';
 import SearchBar from './SearchBar';
+import { FaSignOutAlt } from 'react-icons/fa';
+import { useAuth } from '@/context/AuthContext';
 
 const SideBarHeader = ({
   users,
@@ -16,8 +18,8 @@ const SideBarHeader = ({
   users: UserType[];
   currentUser: UserType;
 }) => {
+  const { setToken, token } = useAuth();
   const url = process.env.NEXT_PUBLIC_API_URL;
-  const token = localStorage.getItem('token');
 
   const [search, setSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -43,6 +45,10 @@ const SideBarHeader = ({
       }
     });
   };
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setToken(null);
+  };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // create chat name
@@ -60,8 +66,16 @@ const SideBarHeader = ({
     closeModal();
   };
   return (
-    <div className="flex cursor-pointer border-b-[1px] border-gray-200 p-4 ">
+    <div className="flex border-b-[1px] border-gray-200 p-4 ">
       <div className="flex w-full justify-center">
+        <Tooltip text="Logout">
+          <button
+            className="mr-4 rotate-180 rounded-lg border border-gray-300 bg-gray-200 p-2 text-gray-700"
+            onClick={handleLogout}
+          >
+            <FaSignOutAlt size={24} />
+          </button>
+        </Tooltip>
         <Tooltip text="Add Chat">
           <button
             onClick={openModal}
