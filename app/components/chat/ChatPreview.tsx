@@ -2,19 +2,17 @@
 import React from 'react';
 import { FaRegMessage } from 'react-icons/fa6';
 import { useCurrentChat } from '@/context/ChatContext';
-import { useRouter } from 'next/navigation';
+import { useIsSidebarOpen } from '@/context/IsSidebarOpen';
 
-const Chat = ({
-  name,
-  id,
-  usersIds,
-}: {
+interface ChatPreviewProps {
   name: string;
   id: string;
   usersIds: string[];
-}) => {
+}
+
+const ChatPreview = ({ name, id, usersIds }: ChatPreviewProps) => {
   const { setChat } = useCurrentChat();
-  const router = useRouter();
+  const { setIsOpen } = useIsSidebarOpen();
 
   const handleClick = () => {
     setChat({
@@ -22,11 +20,12 @@ const Chat = ({
       name,
       usersIds,
     });
-    router.push(`/chats/${id}`);
+    setIsOpen(false);
   };
+
   return (
     <div
-      className="flex w-full cursor-pointer items-start justify-start p-4 "
+      className={`flex w-full cursor-pointer items-start justify-start p-4`}
       onClick={handleClick}
     >
       <div className="mr-4 rounded-full bg-gray-200 p-4">
@@ -40,4 +39,4 @@ const Chat = ({
   );
 };
 
-export default Chat;
+export default ChatPreview;

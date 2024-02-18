@@ -5,17 +5,22 @@ import { handleApi } from '@/helpers/handleApi';
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
+  token: null,
   setUser: () => {},
   setToken: () => {},
-  token: null,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  // to use it inside the authForm to trigger a re-render
-  const [token, setToken] = useState<string | null>(
-    localStorage.getItem('token')
-  );
+  const [token, setToken] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Set token state from localStorage only if running in a browser environment
+    if (typeof window !== 'undefined') {
+      const storedToken = localStorage.getItem('token');
+      setToken(storedToken);
+    }
+  }, []);
 
   useEffect(() => {
     const getCurrentUser = async () => {
@@ -34,7 +39,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         setUser(null);
       }
     };
-
     getCurrentUser();
   }, [token]);
 

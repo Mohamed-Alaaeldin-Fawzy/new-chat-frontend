@@ -2,7 +2,6 @@
 import { useState } from 'react';
 import Input from './Input';
 import { handleApi } from '@/helpers/handleApi';
-import { useRouter } from 'next/navigation';
 import { handleValidation } from '@/helpers/handleValidation';
 import Form from './Form';
 import { AuthFormDataTypes } from '@/types';
@@ -34,8 +33,6 @@ const AuthForm = () => {
 
   const { name, email, password } = formData;
 
-  const router = useRouter();
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -50,7 +47,7 @@ const AuthForm = () => {
     setIsLoading(true);
 
     try {
-      const data = await handleApi(`${url}/auth/${variant.toLowerCase()}`, {
+      const data = await handleApi(`${url}/${variant.toLowerCase()}`, {
         method: 'POST',
         body: { email, password, ...(variant === 'REGISTER' && { name }) },
       });
@@ -94,7 +91,6 @@ const AuthForm = () => {
         <Form
           onSubmit={handleSubmit}
           buttonText={variant === 'LOGIN' ? 'Sign in' : 'Register'}
-          // disabled={} well be implemented with validation
           isLoading={isLoading}
         >
           {getAuthFormInputFields(variant).map(({ id, label, type }) => (

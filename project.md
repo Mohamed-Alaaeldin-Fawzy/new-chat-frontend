@@ -1,0 +1,20 @@
+- PLEASE: classnames should not be strings with new lines.
+- PLEASE: classnames trailing/precieding spaces AND double spacing.
+
+- Remove any plugins in VSCode that messup the spacing (if you plan to use it as an excuse later :D )
+- Add mocks to frontend so that it's not Backend-depentent
+- catch then throw directly without editing is not needed
+- primary - secondary - danger in the button could be one string/type prop
+- components/Chat => ChatPreview
+- check curved chatbox on mobile
+- BACKEND: with InmemoryRepository testing, we can have a function called (seed) that takes UserRepository var and Messages...repo chat..repo and fill then with static testibg data
+- check avatar width/height overwriting
+- let's always separate props interface
+- input onChange is not optional
+- SearchBar => search/setSearch => value/onChange
+- replace Sidebar to use flex over absolute/relative
+- you can have components/Sidebar folder, and have inside of it: index.tsx Header.tsx Skeleton...
+- userChats.map conditions are not needed
+- POST /chats to be added to actions
+- onEvent vs handleEvent (with optional explaining word in the middle like: onCloseClick, onAddClick same with handle)
+- Please remove JSX unintended spaces

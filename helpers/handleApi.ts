@@ -34,6 +34,6 @@ export const handleApi = async (
 
     return data;
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 };
