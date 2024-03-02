@@ -4,7 +4,7 @@ import ChatHeader from './ChatHeader';
 const ChatPlaceholder = () => {
   return (
     <div className="flex h-full w-full flex-col justify-center">
-      <div className="md:hidden">
+      <div className="lg:hidden">
         <ChatHeader />
       </div>
       <div className="grow self-center bg-white py-20">

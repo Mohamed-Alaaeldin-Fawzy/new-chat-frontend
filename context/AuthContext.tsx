@@ -1,7 +1,7 @@
 'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { User, AuthContextType } from '@/types';
-import { handleApi } from '@/helpers/handleApi';
+import { getCurrentUser } from '@/action/getCurrentUser';
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
@@ -23,23 +23,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    const getCurrentUser = async () => {
-      if (token) {
-        const user = await handleApi(
-          `${process.env.NEXT_PUBLIC_API_URL}/user/me`,
-          {
-            method: 'GET',
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    };
-    getCurrentUser();
+    getCurrentUser(setUser, token);
   }, [token]);
 
   return (

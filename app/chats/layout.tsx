@@ -10,7 +10,7 @@ const ChatsLayout = ({ children }: { children?: React.ReactNode }) => {
     <div className="max-w-screen flex h-screen items-center justify-center bg-white align-middle">
       <div className="flex h-full w-full shadow-md">
         <div
-          className={`fixed flex md:static md:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'} inset-0 transition-transform duration-300`}
+          className={`fixed flex lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'} inset-0 flex-shrink-0 transition-transform duration-300`}
         >
           <Sidebar />
         </div>

@@ -5,68 +5,49 @@ import Tooltip from '../ToolTip';
 import ModalForm from '../ModalForm';
 import Form from '../Form';
 import { User as UserType } from '@/types';
-import { createNewChat } from '@/action/createNewChat';
 import UserCheckbox from '../UserCheckbox';
 import Searchbar from './Searchbar';
 import { FaSignOutAlt } from 'react-icons/fa';
-import { useAuth } from '@/context/AuthContext';
 import { useIsSidebarOpen } from '@/context/IsSidebarOpen';
 
 interface SidebarHeaderProps {
   users: UserType[];
   currentUser: UserType;
+  onSubmit: (e: React.FormEvent) => void;
+  onUserSelectChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  selectedUsers: string[];
+  handleLogoutChange: () => void;
+  openModal: () => void;
+  closeModal: () => void;
+  isModalOpen: boolean;
 }
 
-const SidebarHeader = ({ users, currentUser }: SidebarHeaderProps) => {
+const SidebarHeader = ({
+  users,
+  currentUser,
+  onSubmit,
+  onUserSelectChange,
+  selectedUsers,
+  handleLogoutChange,
+  openModal,
+  closeModal,
+  isModalOpen,
+}: SidebarHeaderProps) => {
   const { setIsOpen } = useIsSidebarOpen();
-  const { setToken, token } = useAuth();
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [usersList, setUsersList] = useState<UserType[]>([]);
 
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
+  const [usersList, setUsersList] = useState<UserType[]>([]);
 
   useEffect(() => {
     setUsersList(users.filter((user) => user.id !== currentUser.id));
   }, [users, currentUser]);
 
-  const handleUserSelection = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedUserId = e.target.value;
-    const isSelected = e.target.checked;
-
-    setSelectedUsers((prevSelectedUsers) => {
-      if (isSelected) {
-        return [...prevSelectedUsers, selectedUserId];
-      } else {
-        return prevSelectedUsers.filter((id) => id !== selectedUserId);
-      }
-    });
-  };
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    setToken(null);
-  };
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // create chat name
-    const selectedUsersNames = users
-      .filter((user) => selectedUsers.includes(user.id!))
-      .map((user) => user.name);
-    const chatName = selectedUsersNames.join(', ');
-    // @ts-ignore
-    await createNewChat([...selectedUsers, currentUser.id], chatName);
-    console.log(selectedUsers);
-    setSelectedUsers([]);
-    closeModal();
-  };
   return (
     <div className="flex w-full justify-center border-b-[1px] border-gray-200 p-4">
       <Tooltip text="close sidebar">
         <button
-          className="mr-4 rotate-180 rounded-lg border border-gray-300 bg-gray-200 p-2 text-gray-700 md:hidden"
+          className="mr-4 rotate-180 rounded-lg border border-gray-300 bg-gray-200 p-2 text-gray-700 lg:hidden"
           onClick={() => setIsOpen(false)}
         >
           <FaXmark size={24} />
@@ -75,7 +56,7 @@ const SidebarHeader = ({ users, currentUser }: SidebarHeaderProps) => {
       <Tooltip text="Logout">
         <button
           className="mr-4 rotate-180 rounded-lg border border-gray-300 bg-gray-200 p-2 text-gray-700"
-          onClick={handleLogout}
+          onClick={handleLogoutChange}
         >
           <FaSignOutAlt size={24} />
         </button>
@@ -91,7 +72,7 @@ const SidebarHeader = ({ users, currentUser }: SidebarHeaderProps) => {
       <ModalForm isOpen={isModalOpen} onClose={closeModal}>
         <h1 className="text-xl font-semibold">Please Select chat users </h1>
         <Form
-          onSubmit={handleSubmit}
+          onSubmit={onSubmit}
           buttonText="Create Chat"
           disabled={!(selectedUsers.length > 0)}
         >
@@ -99,7 +80,7 @@ const SidebarHeader = ({ users, currentUser }: SidebarHeaderProps) => {
             usersList.length > 0 &&
             usersList.map((user, index) => (
               <UserCheckbox
-                onUserSelectChange={handleUserSelection}
+                onUserSelectChange={onUserSelectChange}
                 user={user}
                 key={index}
               />

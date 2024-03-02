@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 import { FaRegMessage } from 'react-icons/fa6';
 import { useCurrentChat } from '@/context/ChatContext';

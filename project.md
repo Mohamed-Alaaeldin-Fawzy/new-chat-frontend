@@ -1,20 +1,20 @@
-- PLEASE: classnames should not be strings with new lines.
-- PLEASE: classnames trailing/precieding spaces AND double spacing.
+- PLEASE: classnames should not be strings with new lines. DONE
+- PLEASE: classnames trailing/precieding spaces AND double spacing. DONE
 
-- Remove any plugins in VSCode that messup the spacing (if you plan to use it as an excuse later :D )
-- Add mocks to frontend so that it's not Backend-depentent
-- catch then throw directly without editing is not needed
-- primary - secondary - danger in the button could be one string/type prop
-- components/Chat => ChatPreview
-- check curved chatbox on mobile
-- BACKEND: with InmemoryRepository testing, we can have a function called (seed) that takes UserRepository var and Messages...repo chat..repo and fill then with static testibg data
-- check avatar width/height overwriting
-- let's always separate props interface
-- input onChange is not optional
-- SearchBar => search/setSearch => value/onChange
-- replace Sidebar to use flex over absolute/relative
-- you can have components/Sidebar folder, and have inside of it: index.tsx Header.tsx Skeleton...
-- userChats.map conditions are not needed
-- POST /chats to be added to actions
-- onEvent vs handleEvent (with optional explaining word in the middle like: onCloseClick, onAddClick same with handle)
-- Please remove JSX unintended spaces
+- Remove any plugins in VSCode that messup the spacing (if you plan to use it as an excuse later :D ) DONE
+- Add mocks to frontend so that it's not Backend-depentent DONE
+- catch then throw directly without editing is not needed DONE
+- primary - secondary - danger in the button could be one string/type prop meh DONE
+- components/Chat => ChatPreview DONE
+- check curved chatbox on mobile DONE
+- BACKEND: with InmemoryRepository testing, we can have a function called (seed) that takes UserRepository var and Messages...repo chat..repo and fill then with static testibg data DONE
+- check avatar width/height overwriting DONE
+- let's always separate props interface DONE
+- input onChange is not optional DONE
+- SearchBar => search/setSearch => value/onChange DONE
+- replace Sidebar to use flex over absolute/relative DONE
+- you can have components/Sidebar folder, and have inside of it: index.tsx Header.tsx Skeleton... DONE
+- userChats.map conditions are not needed (naah it is needed)
+- POST /chats to be added to actions DONE
+- onEvent vs handleEvent (with optional explaining word in the middle like: onCloseClick, onAddClick same with handle) DONE
+- Please remove JSX unintended spaces DONE
