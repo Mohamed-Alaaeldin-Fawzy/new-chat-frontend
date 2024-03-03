@@ -1,16 +1,13 @@
 'use client';
 import { useState } from 'react';
 import Input from './Input';
-import { handleApi } from '@/helpers/handleApi';
-import { useRouter } from 'next/navigation';
+import { handleAuth } from '@/action/handleAuth';
 import { handleValidation } from '@/helpers/handleValidation';
 import Form from './Form';
 import { AuthFormDataTypes } from '@/types';
 import { getAuthFormInputFields } from '../authFormData';
 import classNames from 'classnames';
 import { useAuth } from '@/context/AuthContext';
-
-const url = process.env.NEXT_PUBLIC_API_URL;
 
 const AuthForm = () => {
   const { setToken } = useAuth();
@@ -26,6 +23,8 @@ const AuthForm = () => {
 
   const [isLoading, setIsLoading] = useState(false);
 
+  const [disabled, setDisabled] = useState(true);
+
   const [formData, setFormData] = useState<AuthFormDataTypes>({
     name: '',
     email: '',
@@ -33,8 +32,6 @@ const AuthForm = () => {
   });
 
   const { name, email, password } = formData;
-
-  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -50,11 +47,7 @@ const AuthForm = () => {
     setIsLoading(true);
 
     try {
-      const data = await handleApi(`${url}/auth/${variant.toLowerCase()}`, {
-        method: 'POST',
-        body: { email, password, ...(variant === 'REGISTER' && { name }) },
-      });
-
+      const data = await handleAuth(email, password, name, variant);
       localStorage.setItem('token', data.token);
       setToken(data.token);
     } catch (error) {
@@ -68,6 +61,21 @@ const AuthForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
+    if (
+      variant === 'LOGIN' &&
+      formData.email !== '' &&
+      formData.password !== ''
+    ) {
+      setDisabled(false);
+    }
+    if (
+      variant === 'REGISTER' &&
+      formData.email !== '' &&
+      formData.password !== '' &&
+      formData.name !== ''
+    ) {
+      setDisabled(false);
+    }
   };
   return (
     <div
@@ -94,8 +102,8 @@ const AuthForm = () => {
         <Form
           onSubmit={handleSubmit}
           buttonText={variant === 'LOGIN' ? 'Sign in' : 'Register'}
-          // disabled={} well be implemented with validation
           isLoading={isLoading}
+          disabled={disabled}
         >
           {getAuthFormInputFields(variant).map(({ id, label, type }) => (
             <div key={id}>

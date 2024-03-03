@@ -1,10 +1,12 @@
 import React from 'react';
+import { FaXmark } from 'react-icons/fa6';
 
 interface ModalFormProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
 }
+
 const ModalForm = ({ isOpen, onClose, children }: ModalFormProps) => {
   if (!isOpen) return null;
 
@@ -16,7 +18,7 @@ const ModalForm = ({ isOpen, onClose, children }: ModalFormProps) => {
             className="absolute right-3 top-3 rounded-md p-1.5 text-black hover:bg-gray-200"
             onClick={onClose}
           >
-            &#x2715; {/* Close button (X) */}
+            <FaXmark />
           </button>
           {children}
         </div>

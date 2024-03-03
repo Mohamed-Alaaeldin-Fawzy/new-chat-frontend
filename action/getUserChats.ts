@@ -1,14 +1,13 @@
 import { handleApi } from '@/helpers/handleApi';
+import data from '../mockData.json';
 
-export const getUserChats = async ({ id }: { id: string }) => {
-  const chats = await handleApi(
-    `${process.env.NEXT_PUBLIC_API_URL}/chats/${id}`,
-    {
-      method: 'GET',
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}` || '',
-      },
-    }
-  );
-  return chats;
+export const getUserChats = async () => {
+  return await handleApi(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
+    method: 'GET',
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}` || '',
+    },
+  });
+  //   uncomment when testing
+  // return data.chats;
 };

@@ -7,8 +7,7 @@ interface ButtonProps {
   fullWidth?: boolean;
   children?: React.ReactNode;
   onClick?: () => void;
-  secondary?: boolean;
-  danger?: boolean;
+  colorClass?: string;
   disabled?: boolean;
   isLoading?: boolean;
 }
@@ -17,8 +16,7 @@ const Button: React.FC<ButtonProps> = ({
   fullWidth,
   children,
   onClick,
-  secondary,
-  danger,
+  colorClass,
   disabled,
   isLoading,
 }) => {
@@ -27,30 +25,7 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
       type={type}
-      className={`
-            flex
-            justify-center
-            rounded-md
-            px-3
-            py-2
-            text-sm
-            font-semibold
-            text-white
-            focus-visible:outline
-            focus-visible:outline-2
-            focus-visible:outline-offset-2
-            ${disabled && 'cursor-not-allowed opacity-50'}
-            ${fullWidth && 'w-full'}
-            ${
-              danger &&
-              'bg-rose-500 hover:bg-rose-600 focus-visible:outline-rose-600'
-            }
-              ${
-                !secondary &&
-                !danger &&
-                'bg-blue-600 hover:bg-blue-500 focus-visible:outline-blue-600'
-              }
-            `}
+      className={`flex justify-center rounded-md px-3 py-2 text-sm font-semibold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 ${disabled && 'cursor-not-allowed opacity-50'} ${fullWidth && 'w-full'} ${colorClass || ''}`}
     >
       {children}
       {isLoading && <FaSpinner className="ml-2 mt-1 animate-spin" />}

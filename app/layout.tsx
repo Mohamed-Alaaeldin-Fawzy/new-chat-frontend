@@ -4,6 +4,7 @@ import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { ChatProvider } from '@/context/ChatContext';
 import { ProtectedRoute } from './ProtectedRoute';
+import { IsSidebarOpenProvider } from '@/context/IsSidebarOpen';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +23,9 @@ export default function RootLayout({
       <body className={inter.className}>
         <AuthProvider>
           <ProtectedRoute>
-            <ChatProvider>{children}</ChatProvider>
+            <ChatProvider>
+              <IsSidebarOpenProvider>{children}</IsSidebarOpenProvider>
+            </ChatProvider>
           </ProtectedRoute>
         </AuthProvider>
       </body>

@@ -19,7 +19,12 @@ const Form = ({
   return (
     <form className="cursor-auto space-y-6" onSubmit={onSubmit}>
       {children}
-      <Button fullWidth disabled={disabled} isLoading={isLoading}>
+      <Button
+        fullWidth
+        disabled={disabled}
+        isLoading={isLoading}
+        colorClass="bg-blue-500 hover:bg-blue-600"
+      >
         {buttonText || 'Submit'}
       </Button>
     </form>

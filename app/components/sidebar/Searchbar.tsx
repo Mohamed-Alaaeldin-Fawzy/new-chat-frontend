@@ -1,20 +1,18 @@
 import { FaMagnifyingGlass } from 'react-icons/fa6';
 
-const SearchBar = ({
-  search,
-  setSearch,
-}: {
-  search: string;
-  setSearch: any;
-}) => {
+interface SearchbarProps {
+  value: string;
+  onChange: any;
+}
+const Searchbar = ({ value, onChange }: SearchbarProps) => {
   return (
-    <div className="flex max-w-56">
+    <div className="flex">
       <input
         type="text"
         placeholder="search..."
-        className="w-full rounded-l-lg border border-r-0 border-gray-300 p-2"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
+        className="w-full grow rounded-l-lg border border-r-0 border-gray-300 p-2"
+        value={value}
+        onChange={onChange}
       />
       <button
         type="submit"
@@ -26,4 +24,4 @@ const SearchBar = ({
   );
 };
 
-export default SearchBar;
+export default Searchbar;

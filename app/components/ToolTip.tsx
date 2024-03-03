@@ -1,10 +1,9 @@
-const Tooltip = ({
-  children,
-  text,
-}: {
-  children: React.ReactNode;
+interface TooltipProps {
   text: string;
-}) => {
+  children: React.ReactNode;
+}
+
+const Tooltip = ({ children, text }: TooltipProps) => {
   return (
     <div className="group relative flex items-center">
       {children}

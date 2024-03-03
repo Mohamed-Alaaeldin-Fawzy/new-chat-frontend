@@ -3,12 +3,7 @@ import Image from 'next/image';
 
 const Avatar = ({ imgUrl }: { imgUrl: any }) => {
   return (
-    <Image
-      src={imgUrl}
-      alt="Avatar"
-      className="mr-4 h-14 w-14 rounded-full"
-      width={100}
-    />
+    <Image src={imgUrl} alt="Avatar" className="mr-4 rounded-full" width={60} />
   );
 };
 

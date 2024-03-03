@@ -1,11 +1,13 @@
 import { handleApi } from '@/helpers/handleApi';
+import data from '../mockData.json';
 
 export const getUsers = async () => {
-  const users = await handleApi(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+  return await handleApi(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
     method: 'GET',
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}` || '',
     },
   });
-  return users;
+  //   uncomment when testing
+  // return data.users;
 };
