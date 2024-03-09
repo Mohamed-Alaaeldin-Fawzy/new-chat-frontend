@@ -11,37 +11,17 @@ import { FaSignOutAlt } from 'react-icons/fa';
 import { useIsSidebarOpen } from '@/context/IsSidebarOpen';
 
 interface SidebarHeaderProps {
-  users: UserType[];
-  currentUser: UserType;
-  onSubmit: (e: React.FormEvent) => void;
-  onUserSelectChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  selectedUsers: string[];
   handleLogoutChange: () => void;
   openModal: () => void;
-  closeModal: () => void;
-  isModalOpen: boolean;
 }
 
 const SidebarHeader = ({
-  users,
-  currentUser,
-  onSubmit,
-  onUserSelectChange,
-  selectedUsers,
   handleLogoutChange,
   openModal,
-  closeModal,
-  isModalOpen,
 }: SidebarHeaderProps) => {
   const { setIsOpen } = useIsSidebarOpen();
 
   const [searchTerm, setSearchTerm] = useState('');
-
-  const [usersList, setUsersList] = useState<UserType[]>([]);
-
-  useEffect(() => {
-    setUsersList(users.filter((user) => user.id !== currentUser.id));
-  }, [users, currentUser]);
 
   return (
     <div className="flex w-full justify-center border-b-[1px] border-gray-200 p-4">
@@ -69,24 +49,6 @@ const SidebarHeader = ({
           <FaPlus size={24} />
         </button>
       </Tooltip>
-      <ModalForm isOpen={isModalOpen} onClose={closeModal}>
-        <h1 className="text-xl font-semibold">Please Select chat users </h1>
-        <Form
-          onSubmit={onSubmit}
-          buttonText="Create Chat"
-          disabled={!(selectedUsers.length > 0)}
-        >
-          {usersList &&
-            usersList.length > 0 &&
-            usersList.map((user, index) => (
-              <UserCheckbox
-                onUserSelectChange={onUserSelectChange}
-                user={user}
-                key={index}
-              />
-            ))}
-        </Form>
-      </ModalForm>
       <Searchbar
         value={searchTerm}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

@@ -14,7 +14,7 @@ const UserCheckbox = ({ user, onUserSelectChange }: UserCheckboxProps) => {
         onChange={onUserSelectChange}
         value={user.id}
       />
-      <div className="z-10 h-full w-full cursor-pointer rounded-2xl border peer-checked:bg-blue-500 peer-checked:text-white">
+      <div className="h-full w-full cursor-pointer rounded-2xl border peer-checked:bg-blue-500 peer-checked:text-white">
         <User name={user.name} email={user.email} />
       </div>
     </label>

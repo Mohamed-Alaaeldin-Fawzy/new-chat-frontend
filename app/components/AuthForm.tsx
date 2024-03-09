@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Input from './Input';
 import { handleAuth } from '@/action/handleAuth';
 import { handleValidation } from '@/helpers/handleValidation';
@@ -12,7 +12,7 @@ import { useAuth } from '@/context/AuthContext';
 const AuthForm = () => {
   const { setToken } = useAuth();
 
-  const [variant, setVariant] = useState<'LOGIN' | 'REGISTER'>('REGISTER');
+  const [variant, setVariant] = useState<'LOGIN' | 'REGISTER'>('LOGIN');
 
   const [inputErrors, setInputErrors] = useState({
     name: '',
@@ -32,6 +32,24 @@ const AuthForm = () => {
   });
 
   const { name, email, password } = formData;
+
+  useEffect(() => {
+    if (
+      variant === 'LOGIN' &&
+      formData.email !== '' &&
+      formData.password !== ''
+    ) {
+      setDisabled(false);
+    }
+    if (
+      variant === 'REGISTER' &&
+      formData.email !== '' &&
+      formData.password !== '' &&
+      formData.name !== ''
+    ) {
+      setDisabled(false);
+    }
+  }, [formData, variant]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,21 +79,6 @@ const AuthForm = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
-    if (
-      variant === 'LOGIN' &&
-      formData.email !== '' &&
-      formData.password !== ''
-    ) {
-      setDisabled(false);
-    }
-    if (
-      variant === 'REGISTER' &&
-      formData.email !== '' &&
-      formData.password !== '' &&
-      formData.name !== ''
-    ) {
-      setDisabled(false);
-    }
   };
   return (
     <div

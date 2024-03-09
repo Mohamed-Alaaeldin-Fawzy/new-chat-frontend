@@ -6,7 +6,7 @@ interface SearchbarProps {
 }
 const Searchbar = ({ value, onChange }: SearchbarProps) => {
   return (
-    <div className="flex">
+    <div className="flex flex-grow">
       <input
         type="text"
         placeholder="search..."

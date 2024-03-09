@@ -2,38 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import User from '../User';
 import { useAuth } from '@/context/AuthContext';
-import { getUsers } from '@/action/getUsers';
 import { getUserChats } from '@/action/getUserChats';
-import { User as UserType, Chat as ChatType } from '@/types';
+import { Chat as ChatType } from '@/types';
 import SideBarHeader from './SidebarHeader';
 import ChatPreview from '../chat/ChatPreview';
 import SidebarSkeleton from './SidebarSkeleton';
-import { createNewChat } from '@/action/createNewChat';
 
-const Sidebar = () => {
+const Sidebar = ({
+  setIsModalOpen,
+  selectedUsers,
+}: {
+  setIsModalOpen: any;
+  selectedUsers: string[];
+}) => {
   const { user } = useAuth();
-  const [users, setUsers] = useState<UserType[]>([]);
-  const [userChats, setUserChats] = useState<ChatType[]>([]);
-  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
-  const { setToken } = useAuth();
 
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const users = await getUsers();
-        setUsers(users);
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-        // Handle error
-      }
-    };
-    if (user?.id) {
-      fetchUsers();
-    }
-  }, [user]);
+  const [userChats, setUserChats] = useState<ChatType[]>([]);
+  const openModal = () => setIsModalOpen(true);
+  const { setToken } = useAuth();
 
   useEffect(() => {
     const fetchUserChats = async () => {
@@ -42,39 +28,10 @@ const Sidebar = () => {
         setUserChats(userChats);
       } catch (error) {
         console.error('Failed to fetch user chats:', error);
-        // Handle error (e.g., set an error state, show a message, etc.)
       }
     };
-    if (user?.id) {
-      fetchUserChats();
-    }
-  }, [user, selectedUsers]);
-
-  const handelAddChatSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    // create chat name
-    const selectedUsersNames = users
-      .filter((user) => selectedUsers.includes(user.id!))
-      .map((user) => user.name);
-    const chatName = selectedUsersNames.join(', ');
-    // @ts-ignore
-    await createNewChat([...selectedUsers, user.id], chatName);
-    setSelectedUsers([]);
-    closeModal();
-  };
-
-  const handleUserSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedUserId = e.target.value;
-    const isSelected = e.target.checked;
-
-    setSelectedUsers((prevSelectedUsers) => {
-      if (isSelected) {
-        return [...prevSelectedUsers, selectedUserId];
-      } else {
-        return prevSelectedUsers.filter((id) => id !== selectedUserId);
-      }
-    });
-  };
+    fetchUserChats();
+  }, [selectedUsers]);
 
   const handleLogoutChange = () => {
     localStorage.removeItem('token');
@@ -82,20 +39,13 @@ const Sidebar = () => {
   };
 
   return user ? (
-    <div className="flex h-full flex-col rounded-2xl border-r-[1px] border-gray-200 bg-white lg:rounded-r-none">
+    <div className="flex h-full w-full flex-col border-r-[1px] border-gray-200 bg-white">
       <SideBarHeader
-        users={users}
-        currentUser={user!}
-        onSubmit={handelAddChatSubmit}
-        onUserSelectChange={handleUserSelectChange}
-        selectedUsers={selectedUsers}
         handleLogoutChange={handleLogoutChange}
         openModal={openModal}
-        closeModal={closeModal}
-        isModalOpen={isModalOpen}
       />
       <div className="grow overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-900">
-        {userChats &&
+        {userChats.length > 0 &&
           userChats.map((chat) => (
             <div
               key={chat.id}
@@ -114,7 +64,7 @@ const Sidebar = () => {
       </div>
     </div>
   ) : (
-    <div className="flex h-full min-w-[21.8rem] flex-col rounded-2xl border-r-[1px] border-gray-200 bg-white lg:rounded-r-none">
+    <div className="flex h-full min-w-96 flex-col border-r-[1px] border-gray-200 bg-white">
       <SidebarSkeleton />
     </div>
   );
