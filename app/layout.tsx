@@ -3,6 +3,7 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { AuthProvider } from '@/context/AuthContext';
 import { ChatProvider } from '@/context/ChatContext';
+import { UsersProvider } from '@/context/UsersContext';
 import { ProtectedRoute } from './ProtectedRoute';
 import { IsSidebarOpenProvider } from '@/context/IsSidebarOpen';
 
@@ -22,11 +23,13 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <AuthProvider>
-          <ProtectedRoute>
-            <ChatProvider>
-              <IsSidebarOpenProvider>{children}</IsSidebarOpenProvider>
-            </ChatProvider>
-          </ProtectedRoute>
+          <UsersProvider>
+            <ProtectedRoute>
+              <ChatProvider>
+                <IsSidebarOpenProvider>{children}</IsSidebarOpenProvider>
+              </ChatProvider>
+            </ProtectedRoute>
+          </UsersProvider>
         </AuthProvider>
       </body>
     </html>

@@ -10,7 +10,7 @@ const Searchbar = ({ value, onChange }: SearchbarProps) => {
       <input
         type="text"
         placeholder="search..."
-        className="w-full grow rounded-l-lg border border-r-0 border-gray-300 p-2"
+        className="grow rounded-l-lg border border-r-0 border-gray-300 px-4 py-2 outline-none"
         value={value}
         onChange={onChange}
       />

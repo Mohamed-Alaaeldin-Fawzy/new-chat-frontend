@@ -5,12 +5,13 @@ import avatarImg from '@/public/avatar.png';
 interface UserProps {
   name: string;
   email: string;
+  image?: string;
 }
 
-const User = ({ name, email }: UserProps) => {
+const User = ({ name, email, image }: UserProps) => {
   return (
     <div className="flex w-full cursor-pointer items-center justify-center p-4 align-middle">
-      <Avatar imgUrl={avatarImg} />
+      <Avatar imgUrl={image || avatarImg} />
       <div>
         <h3 className="text-xl font-semibold">{name}</h3>
         <p className="text-sm">{email}</p>

@@ -17,4 +17,19 @@
 - userChats.map conditions are not needed (naah it is needed)
 - POST /chats to be added to actions DONE
 - onEvent vs handleEvent (with optional explaining word in the middle like: onCloseClick, onAddClick same with handle) DONE
-- Please remove JSX unintended spaces DONE
+- Please remove JSX unintended spaces DONE\
+
+- field for chatName and make it required if there is more than one person done
+- check if condition done
+- make the uses only scroll in modal also find a way to track selected users done
+- use cls
+- check the repeated syntax
+- check use client
+- make use of props and default valuies in search
+- make tooltip button
+- make search bar
+- make the Register and login ternary in object and show whatever in that object
+- review the code before push
+- typescript errors in ts-ignores
+- check the repeated classes
+- fix /me error done

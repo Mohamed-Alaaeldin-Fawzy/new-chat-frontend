@@ -15,7 +15,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [token, setToken] = useState<string | null>(null);
 
   useEffect(() => {
-    // Set token state from localStorage only if running in a browser environment
     if (typeof window !== 'undefined') {
       const storedToken = localStorage.getItem('token');
       setToken(storedToken);
@@ -23,7 +22,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    getCurrentUser(setUser, token);
+    if (!!token) {
+      getCurrentUser(setUser, token);
+    } else {
+      setUser(null);
+    }
   }, [token]);
 
   return (

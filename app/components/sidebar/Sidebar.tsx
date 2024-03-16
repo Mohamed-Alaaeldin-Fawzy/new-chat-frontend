@@ -1,5 +1,5 @@
-'use client';
 import React, { useState, useEffect } from 'react';
+import cls from 'classnames';
 import User from '../User';
 import { useAuth } from '@/context/AuthContext';
 import { getUserChats } from '@/action/getUserChats';
@@ -7,6 +7,7 @@ import { Chat as ChatType } from '@/types';
 import SideBarHeader from './SidebarHeader';
 import ChatPreview from '../chat/ChatPreview';
 import SidebarSkeleton from './SidebarSkeleton';
+import { useRouter } from 'next/navigation';
 
 const Sidebar = ({
   setIsModalOpen,
@@ -16,22 +17,27 @@ const Sidebar = ({
   selectedUsers: string[];
 }) => {
   const { user } = useAuth();
-
+  const [originalUserChats, setOriginalUserChats] = useState<ChatType[]>([]);
   const [userChats, setUserChats] = useState<ChatType[]>([]);
   const openModal = () => setIsModalOpen(true);
   const { setToken } = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const fetchUserChats = async () => {
       try {
-        const userChats = await getUserChats();
-        setUserChats(userChats);
+        const chats = await getUserChats();
+        setUserChats(chats);
+        setOriginalUserChats(chats);
       } catch (error) {
         console.error('Failed to fetch user chats:', error);
       }
     };
-    fetchUserChats();
-  }, [selectedUsers]);
+
+    if (user) {
+      fetchUserChats();
+    }
+  }, [user, selectedUsers]);
 
   const handleLogoutChange = () => {
     localStorage.removeItem('token');
@@ -41,26 +47,41 @@ const Sidebar = ({
   return user ? (
     <div className="flex h-full w-full flex-col border-r-[1px] border-gray-200 bg-white">
       <SideBarHeader
+        setUserChats={setUserChats}
+        originalUserChats={originalUserChats}
         handleLogoutChange={handleLogoutChange}
         openModal={openModal}
       />
-      <div className="grow overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-900">
+      <div
+        className={cls(
+          'grow overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-900'
+        )}
+      >
         {userChats.length > 0 &&
           userChats.map((chat) => (
             <div
               key={chat.id}
-              className="m-4 flex flex-col items-start rounded-xl hover:bg-gray-200"
+              className={cls(
+                'm-4 flex cursor-pointer flex-col items-start rounded-xl',
+                {
+                  'hover:bg-gray-200': chat.id,
+                }
+              )}
             >
               <ChatPreview
                 name={chat.name}
                 id={chat.id}
                 usersIds={chat.usersIds}
+                subText="tap to chat"
               />
             </div>
           ))}
       </div>
-      <div className="border-t-[1px] border-gray-200 p-4">
-        {user && <User name={user.name} email={user?.email} />}
+      <div
+        className="border-t-[1px] border-gray-200 p-4"
+        onClick={() => router.push(`/user/${user.id}`)}
+      >
+        <User name={user.name} email={user?.email} image={user.image} />
       </div>
     </div>
   ) : (

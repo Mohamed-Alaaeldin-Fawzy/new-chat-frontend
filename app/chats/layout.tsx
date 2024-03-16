@@ -1,107 +1,149 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, FormEvent, ChangeEvent } from 'react';
+import cls from 'classnames';
 import Sidebar from '../components/sidebar/Sidebar';
 import ChatRoom from '../components/chat/ChatRoom';
 import { useIsSidebarOpen } from '@/context/IsSidebarOpen';
 import { useAuth } from '@/context/AuthContext';
+import { useGetUsers } from '@/context/UsersContext';
 import ModalForm from '@/app/components/ModalForm';
 import Form from '@/app/components/Form';
 import UserCheckbox from '@/app/components/UserCheckbox';
-import { getUsers } from '@/action/getUsers';
 import { User as UserType } from '@/types';
 import { createNewChat } from '@/action/createNewChat';
+import { FaXmark } from 'react-icons/fa6';
 
-const ChatsLayout = ({ children }: { children?: React.ReactNode }) => {
+interface ChatName {
+  label: string;
+  value: string;
+  required: boolean;
+}
+
+const ChatsLayout: React.FC<{ children?: React.ReactNode }> = ({
+  children,
+}) => {
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
-  const [users, setUsers] = useState<UserType[]>([]);
+  const { users } = useGetUsers();
   const { user } = useAuth();
   const { isOpen } = useIsSidebarOpen();
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const closeModal = () => setIsModalOpen(false);
   const [usersList, setUsersList] = useState<UserType[]>([]);
+  const [chatName, setChatName] = useState<ChatName>({
+    required: false,
+    label: 'Chat Name',
+    value: '',
+  });
 
   useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const users = await getUsers();
-        setUsers(users);
-        setUsersList(
-          users.filter((userItem: UserType) => userItem.id !== user!.id)
-        );
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-        // Handle error
-      }
-    };
-    if (user?.id) {
-      fetchUsers();
-    }
-  }, [user]);
+    setUsersList(
+      users.filter((userItem: UserType) => userItem.id !== user?.id)
+    );
+  }, [user, users]);
 
-  const handelAddChatSubmit = async (e: React.FormEvent) => {
+  const handleAddChatSubmit = async (e: FormEvent) => {
     e.preventDefault();
-    // create chat name
-    let chatName;
-    const selectedUsersNames = users
-      .filter((user) => selectedUsers.includes(user.id!))
-      .map((user) => user.name);
-    if (selectedUsersNames.length === 0) {
-      return;
-    } else if (selectedUsersNames.length === 1) {
-      chatName = `private chat between ${selectedUsersNames.join(', ')} and ${user!.name}`;
+
+    const selectedUsersNames = users!
+      .filter((userItem) => selectedUsers.includes(userItem.id!))
+      .map((userItem) => userItem.name);
+
+    if (selectedUsersNames.length === 1) {
+      setChatName({
+        ...chatName,
+        required: false,
+      });
+      await createNewChat(
+        // @ts-ignore
+        [...selectedUsers, user!.id]
+      );
     } else {
-      chatName = `chat room with ${selectedUsersNames.join(',')} and ${user!.name}`;
+      setChatName({ ...chatName, required: true });
+      // @ts-ignore
+      await createNewChat([...selectedUsers, user!.id], chatName.value);
     }
-    //  @ts-ignore
-    await createNewChat([...selectedUsers, user.id], chatName);
     setSelectedUsers([]);
-    closeModal();
+    setIsModalOpen(false);
+    setChatName({ ...chatName, value: '' });
   };
 
-  const handleUserSelectChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedUserId = e.target.value;
-    const isSelected = e.target.checked;
+  const handleUserSelectChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
 
-    setSelectedUsers((prevSelectedUsers) => {
-      if (isSelected) {
-        return [...prevSelectedUsers, selectedUserId];
-      } else {
-        return prevSelectedUsers.filter((id) => id !== selectedUserId);
-      }
-    });
+    setSelectedUsers((prevSelectedUsers) =>
+      checked
+        ? [...prevSelectedUsers, value]
+        : prevSelectedUsers.filter((id) => id !== value)
+    );
   };
+
+  const sidebarClasses = cls(
+    'fixed lg:static flex lg:translate-x-0 inset-0 flex-shrink-0 transition-transform duration-300',
+    {
+      'translate-x-0': isOpen,
+      '-translate-x-full': !isOpen,
+    }
+  );
 
   return (
     <div className="max-w-screen flex h-screen items-center justify-center bg-white align-middle">
-      <ModalForm isOpen={isModalOpen} onClose={closeModal}>
+      <ModalForm
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setSelectedUsers([]);
+        }}
+      >
         <h1 className="text-xl font-semibold">Please Select chat users </h1>
+
         <Form
-          onSubmit={handelAddChatSubmit}
+          onSubmit={handleAddChatSubmit}
           buttonText="Create Chat"
-          disabled={!(selectedUsers.length > 0)}
+          disabled={!selectedUsers.length}
+          input={chatName}
+          handleInputChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setChatName({ ...chatName, value: e.target.value })
+          }
         >
-          {usersList &&
-            usersList.length > 0 &&
-            usersList.map((user, index) => (
+          <div className="mt-2 flex flex-wrap gap-2">
+            {selectedUsers.map((userId, index) => (
+              <span
+                key={index}
+                className="inline-flex gap-2 rounded bg-blue-400 px-2 py-1 text-sm text-white"
+              >
+                {users!.find((user) => user.id === userId)?.name}
+                <FaXmark
+                  className="cursor-pointer text-white"
+                  size={15}
+                  onClick={() =>
+                    setSelectedUsers((previousSelected) =>
+                      previousSelected.filter((id) => id !== userId)
+                    )
+                  }
+                />
+              </span>
+            ))}
+          </div>
+          <div className="w-full flex-1 overflow-auto">
+            {usersList.map((user, index) => (
               <UserCheckbox
+                key={index}
+                selectedUsers={selectedUsers}
                 onUserSelectChange={handleUserSelectChange}
                 user={user}
-                key={index}
               />
             ))}
+          </div>
         </Form>
       </ModalForm>
       <div className="flex h-full w-full">
-        <div
-          className={`fixed flex lg:static lg:translate-x-0 ${isOpen ? 'translate-x-0' : '-translate-x-full'} inset-0 flex-shrink-0 transition-transform duration-300`}
-        >
+        <div className={sidebarClasses}>
           <Sidebar
             setIsModalOpen={setIsModalOpen}
             selectedUsers={selectedUsers}
           />
         </div>
         <div className="flex h-full w-full flex-col">
-          <ChatRoom>{children || ''}</ChatRoom>
+          <ChatRoom>{children}</ChatRoom>
         </div>
       </div>
     </div>

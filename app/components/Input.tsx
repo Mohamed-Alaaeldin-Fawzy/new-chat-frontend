@@ -1,5 +1,5 @@
-'use client';
 import React from 'react';
+import cls from 'classnames';
 
 interface InputProps {
   id: string;
@@ -14,26 +14,37 @@ interface InputProps {
 const Input: React.FC<InputProps> = ({
   id,
   label,
-  type,
-  disabled,
+  type = 'text',
+  disabled = false,
   onChange,
   value,
+  required = false,
 }) => {
+  const inputClass = cls(
+    'form-input block w-full rounded-md px-4 py-1.5 text-gray-900 shadow-sm sm:text-sm sm:leading-6',
+    'focus:ring-[1px] focus:ring-blue-500',
+    'ring-1 ring-inset ring-gray-300 placeholder:text-gray-400',
+    {
+      'cursor-default opacity-50': disabled,
+    }
+  );
+
   return (
     <div>
-      <label className="block text-sm font-medium leading-6" htmlFor={id}>
+      <label htmlFor={id} className="block text-sm font-medium leading-6">
         {label}
       </label>
       <div className="mt-2">
         <input
-          value={value}
-          id={id}
           type={type}
-          autoComplete="off"
+          id={id}
+          required={required}
           disabled={disabled}
-          className={`form-input block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-[1px] focus:ring-inset focus:ring-blue-500 sm:text-sm sm:leading-6${disabled && 'cursor-default opacity-50'}`}
+          value={value}
           onChange={onChange}
-        ></input>
+          className={inputClass}
+          autoComplete="off"
+        />
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ import { generateRandomNumber } from '../helpers/generateRandomId';
 
 export const createNewChat = async (
   selectedUsers: string[],
-  chatName: string
+  chatName?: string
 ) => {
   return await handleApi(`${process.env.NEXT_PUBLIC_API_URL}/chat`, {
     method: 'POST',

@@ -1,4 +1,3 @@
-'use client';
 import React from 'react';
 
 const ChatRoom = ({ children }: { children: React.ReactNode }) => {

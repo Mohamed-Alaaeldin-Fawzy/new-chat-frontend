@@ -10,13 +10,14 @@ import ChatForm from '@/app/components/chat/ChatForm';
 import ChatPlaceholder from '../components/chat/ChatPlaceholder';
 import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
+import { useGetUsers } from '@/context/UsersContext';
 
 const UserChat = () => {
   const { chat } = useCurrentChat();
   const [messageBody, setMessageBody] = useState('');
   const [chatMessages, setChatMessages] = useState<any[]>([]);
   const { user } = useAuth();
-
+  const { users } = useGetUsers();
   const socketRef = useRef<Socket<any> | null>(null);
 
   if (!socketRef.current) {
@@ -34,7 +35,7 @@ const UserChat = () => {
       body: messageBody,
     };
 
-    socketRef.current?.emit('sendMessage', messageObject);
+    socketRef.current?.emit('sendMessage', { messageObject });
 
     // @ts-ignore
     sendMessage(messageObject);
@@ -55,6 +56,8 @@ const UserChat = () => {
   useEffect(() => {
     const socket = io(process.env.NEXT_PUBLIC_API_URL!);
 
+    socket.emit('joinChat', chat?.id);
+
     socket.on('messageReceived', (data) => {
       setChatMessages((prevMessages) => [...prevMessages, data]);
     });
@@ -62,11 +65,11 @@ const UserChat = () => {
     return () => {
       socket.off('messageReceived');
     };
-  }, []);
+  }, [chat]);
 
   return chat ? (
     <div className="flex h-full w-full flex-col">
-      <ChatHeader chat={chat} />
+      <ChatHeader chat={chat} users={users} />
       <div className="flex grow flex-col justify-end overflow-y-auto bg-white p-6">
         {chatMessages.map((message: any) => (
           <ChatBody

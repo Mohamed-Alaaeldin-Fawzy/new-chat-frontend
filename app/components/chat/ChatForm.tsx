@@ -11,7 +11,7 @@ const ChatForm = ({ onSubmit, messageBody, onChange }: ChatFormProps) => {
   return (
     <form
       onSubmit={onSubmit}
-      className="flex max-w-full items-center justify-between bg-white p-6 "
+      className="flex max-w-full items-center justify-between bg-white p-6"
     >
       <input
         type="text"
