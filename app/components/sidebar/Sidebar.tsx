@@ -7,7 +7,7 @@ import { Chat as ChatType } from '@/types';
 import SideBarHeader from './SidebarHeader';
 import ChatPreview from '../chat/ChatPreview';
 import SidebarSkeleton from './SidebarSkeleton';
-import { useRouter } from 'next/navigation';
+import ProfileSection from '../profile/ProfileSection';
 
 const Sidebar = ({
   setIsModalOpen,
@@ -21,8 +21,11 @@ const Sidebar = ({
   const [userChats, setUserChats] = useState<ChatType[]>([]);
   const openModal = () => setIsModalOpen(true);
   const { setToken } = useAuth();
-  const router = useRouter();
 
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // State to track drawer visibility
+  const toggleDrawer = () => {
+    setIsDrawerOpen(!isDrawerOpen);
+  };
   useEffect(() => {
     const fetchUserChats = async () => {
       try {
@@ -45,45 +48,47 @@ const Sidebar = ({
   };
 
   return user ? (
-    <div className="flex h-full w-full flex-col border-r-[1px] border-gray-200 bg-white">
-      <SideBarHeader
-        setUserChats={setUserChats}
-        originalUserChats={originalUserChats}
-        handleLogoutChange={handleLogoutChange}
-        openModal={openModal}
+    <>
+      <div className="flex h-full w-full flex-col border-r-[1px] border-gray-200 bg-white">
+        <SideBarHeader
+          setUserChats={setUserChats}
+          originalUserChats={originalUserChats}
+          handleLogoutChange={handleLogoutChange}
+          openModal={openModal}
+        />
+        <div className="grow overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-900">
+          {userChats.length > 0 &&
+            userChats.map((chat) => (
+              <div
+                key={chat.id}
+                className={cls(
+                  'm-4 flex cursor-pointer flex-col items-start rounded-xl',
+                  {
+                    'hover:bg-gray-200': chat.id,
+                  }
+                )}
+              >
+                <ChatPreview
+                  name={chat.name}
+                  id={chat.id}
+                  usersIds={chat.usersIds}
+                  subText="tap to chat"
+                />
+              </div>
+            ))}
+        </div>
+        <div
+          className="border-t-[1px] border-gray-200 p-4"
+          onClick={toggleDrawer}
+        >
+          <User name={user.name} email={user?.email} image={user.image} />
+        </div>
+      </div>
+      <ProfileSection
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
       />
-      <div
-        className={cls(
-          'grow overflow-y-auto scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-gray-900'
-        )}
-      >
-        {userChats.length > 0 &&
-          userChats.map((chat) => (
-            <div
-              key={chat.id}
-              className={cls(
-                'm-4 flex cursor-pointer flex-col items-start rounded-xl',
-                {
-                  'hover:bg-gray-200': chat.id,
-                }
-              )}
-            >
-              <ChatPreview
-                name={chat.name}
-                id={chat.id}
-                usersIds={chat.usersIds}
-                subText="tap to chat"
-              />
-            </div>
-          ))}
-      </div>
-      <div
-        className="border-t-[1px] border-gray-200 p-4"
-        onClick={() => router.push(`/user/${user.id}`)}
-      >
-        <User name={user.name} email={user?.email} image={user.image} />
-      </div>
-    </div>
+    </>
   ) : (
     <div className="flex h-full min-w-96 flex-col border-r-[1px] border-gray-200 bg-white">
       <SidebarSkeleton />

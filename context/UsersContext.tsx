@@ -20,8 +20,9 @@ export const UsersProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const fetchedUsers = await getUsers();
         setUsers(fetchedUsers);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Failed to fetch users:', error);
+        throw new Error(error.message);
       }
     };
 

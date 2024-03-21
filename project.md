@@ -22,14 +22,14 @@
 - field for chatName and make it required if there is more than one person done
 - check if condition done
 - make the uses only scroll in modal also find a way to track selected users done
-- use cls
-- check the repeated syntax
-- check use client
-- make use of props and default valuies in search
+- use cls done
+- check the repeated syntax done
+- check use client done
+- make use of props and default values in search
 - make tooltip button
-- make search bar
-- make the Register and login ternary in object and show whatever in that object
-- review the code before push
-- typescript errors in ts-ignores
-- check the repeated classes
+- make search bar done
+- make the Register and login ternary in object and show whatever in that object done
+- review the code before push done
+- typescript errors in ts-ignores done
+- check the repeated classes done
 - fix /me error done

@@ -35,9 +35,11 @@ const ChatHeader = ({ chat, users }: ChatHeaderProps) => {
       >
         <FaAlignJustify size={30} />
       </button>
-      {chat && (
-        <ChatPreview name={chat.name} id={chat.id} usersIds={chat.usersIds} />
-      )}
+      <div className="z-0">
+        {chat && (
+          <ChatPreview name={chat.name} id={chat.id} usersIds={chat.usersIds} />
+        )}
+      </div>
     </div>
   );
 };

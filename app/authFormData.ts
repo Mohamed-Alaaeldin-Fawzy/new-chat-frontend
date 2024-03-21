@@ -1,25 +1,35 @@
-const loginInputFields = [
-  {
-    id: 'email',
-    label: 'Email',
-    type: 'email',
-  },
-  {
-    id: 'password',
-    label: 'Password',
-    type: 'password',
-  },
-];
+const inputFieldMappings = {
+  LOGIN: [
+    {
+      id: 'email',
+      label: 'Email',
+      type: 'email',
+    },
+    {
+      id: 'password',
+      label: 'Password',
+      type: 'password',
+    },
+  ],
+  REGISTER: [
+    {
+      id: 'name',
+      label: 'Name',
+      type: 'text',
+    },
+    {
+      id: 'email',
+      label: 'Email',
+      type: 'email',
+    },
+    {
+      id: 'password',
+      label: 'Password',
+      type: 'password',
+    },
+  ],
+};
 
-const registrationInputFields = [
-  {
-    id: 'name',
-    label: 'Name',
-    type: 'text',
-  },
-  ...loginInputFields,
-];
-
-export const getAuthFormInputFields = (variant: string) => {
-  return variant === 'LOGIN' ? loginInputFields : registrationInputFields;
+export const getAuthFormInputFields = (variant: 'LOGIN' | 'REGISTER') => {
+  return inputFieldMappings[variant] || [];
 };

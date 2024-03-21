@@ -6,7 +6,6 @@ import { handleValidation } from '@/helpers/handleValidation';
 import Form from './Form';
 import { AuthFormDataTypes, InputErrors } from '@/types';
 import { getAuthFormInputFields } from '../authFormData';
-import cls from 'classnames';
 import { useAuth } from '@/context/AuthContext';
 
 const AuthForm = () => {
@@ -27,6 +26,31 @@ const AuthForm = () => {
     password: '',
   });
 
+  interface FormConfig {
+    buttonLabel: string;
+    header: string;
+    switchText: string;
+    switchActionLabel: string;
+    switchVariant: 'REGISTER' | 'LOGIN';
+  }
+
+  const formConfig: Record<'REGISTER' | 'LOGIN', FormConfig> = {
+    LOGIN: {
+      buttonLabel: 'Sign in',
+      header: 'Sign in',
+      switchText: "Don't have an account?",
+      switchActionLabel: 'Create an account',
+      switchVariant: 'REGISTER',
+    },
+    REGISTER: {
+      buttonLabel: 'Register',
+      header: 'Register',
+      switchText: 'Already have an account?',
+      switchActionLabel: 'Login',
+      switchVariant: 'LOGIN',
+    },
+  };
+
   useEffect(() => {
     const isLoginValid =
       variant === 'LOGIN' && formData.email && formData.password;
@@ -40,7 +64,6 @@ const AuthForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     const { isValid, errors } = await handleValidation(variant, formData);
     console.log('Validation result:', isValid, errors);
 
@@ -73,15 +96,15 @@ const AuthForm = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  const currentConfig = formConfig[variant];
+
   return (
-    <div className={cls('mx-auto mt-8 w-full max-w-md self-center')}>
-      <h2 className={cls('text-center text-3xl font-bold')}>
-        {variant === 'LOGIN' ? 'Sign in' : 'Register'}
-      </h2>
-      <div className={cls('mt-4 rounded-lg bg-white p-8 shadow-lg')}>
+    <div className="mx-auto mt-8 w-full max-w-md self-center">
+      <h2 className="text-center text-3xl font-bold">{currentConfig.header}</h2>
+      <div className="mt-4 rounded-lg bg-white p-8 shadow-lg">
         <Form
           onSubmit={handleSubmit}
-          buttonText={variant === 'LOGIN' ? 'Sign in' : 'Register'}
+          buttonText={currentConfig.buttonLabel}
           isLoading={isLoading}
           disabled={disabled}
         >
@@ -107,18 +130,12 @@ const AuthForm = () => {
           </p>
         )}
         <div className="mt-4 flex justify-center border-t-[1px] border-gray-200 py-4 text-center text-sm text-gray-500">
-          <div>
-            {variant === 'LOGIN'
-              ? "Don't have an account?"
-              : 'Already have an account?'}
-          </div>
+          <div>{currentConfig.switchText}</div>
           <div
             className="ml-2 cursor-pointer text-blue-500 underline"
-            onClick={() =>
-              setVariant(variant === 'LOGIN' ? 'REGISTER' : 'LOGIN')
-            }
+            onClick={() => setVariant(currentConfig.switchVariant)}
           >
-            {variant === 'LOGIN' ? 'Create an account' : 'Login'}
+            {currentConfig.switchActionLabel}
           </div>
         </div>
       </div>

@@ -6,6 +6,7 @@ import { ChatProvider } from '@/context/ChatContext';
 import { UsersProvider } from '@/context/UsersContext';
 import { ProtectedRoute } from './ProtectedRoute';
 import { IsSidebarOpenProvider } from '@/context/IsSidebarOpen';
+import { SocketProvider } from '@/context/SocketContext';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -26,7 +27,9 @@ export default function RootLayout({
           <UsersProvider>
             <ProtectedRoute>
               <ChatProvider>
-                <IsSidebarOpenProvider>{children}</IsSidebarOpenProvider>
+                <SocketProvider>
+                  <IsSidebarOpenProvider>{children}</IsSidebarOpenProvider>
+                </SocketProvider>
               </ChatProvider>
             </ProtectedRoute>
           </UsersProvider>

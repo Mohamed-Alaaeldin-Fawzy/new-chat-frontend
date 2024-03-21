@@ -1,5 +1,4 @@
 import React from 'react';
-import cls from 'classnames';
 
 interface ActionButtonProps {
   onClick: () => void;
@@ -10,9 +9,7 @@ const ActionButton: React.FC<ActionButtonProps> = ({ onClick, text }) => {
   return (
     <button
       onClick={onClick}
-      className={cls(
-        'mt-3 w-full rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600'
-      )}
+      className="mt-3 w-full rounded-lg bg-gray-500 px-4 py-2 text-white hover:bg-gray-600"
     >
       {text}
     </button>

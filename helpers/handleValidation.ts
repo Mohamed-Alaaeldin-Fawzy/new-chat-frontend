@@ -23,22 +23,21 @@ const schemas = {
 
 export const handleValidation = async (
   context: keyof typeof schemas,
-  data: any
-) => {
+  data: Record<string, any>
+): Promise<{ isValid: boolean; errors: Record<string, string> }> => {
   try {
     const schema = schemas[context];
     if (!schema) throw new Error(`Unknown validation context: ${context}`);
 
-    await schema.validate(data, { abortEarly: false }); // Validate the data
-    return { isValid: true, errors: {} }; // Return no errors if validation passes
+    await schema.validate(data, { abortEarly: false });
+    return { isValid: true, errors: {} };
   } catch (err) {
     if (err instanceof yup.ValidationError) {
-      // Simplify error reduction using arrow function and implicit return
-      const errors = err.inner.reduce(
-        (acc, { path = 'unknown', message }) => ({
-          ...acc,
-          [path]: message,
-        }),
+      const errors = err.inner.reduce<Record<string, string>>(
+        (acc, { path, message }) => {
+          if (path) acc[path] = message;
+          return acc;
+        },
         {}
       );
       return { isValid: false, errors };

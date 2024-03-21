@@ -5,7 +5,6 @@ import Tooltip from '../ToolTip';
 import { Chat as ChatType } from '@/types';
 import Searchbar from './Searchbar';
 import { useIsSidebarOpen } from '@/context/IsSidebarOpen';
-import cls from 'classnames';
 
 interface SidebarHeaderProps {
   handleLogoutChange: () => void;
@@ -28,37 +27,19 @@ const SidebarHeader = ({
     setSearchTerm(value);
     setUserChats(
       value
-        ? originalUserChats.filter((chat) =>
-            chat.name.toLowerCase().includes(value.toLowerCase())
+        ? originalUserChats.filter(
+            (chat) =>
+              chat.name && chat.name.toLowerCase().includes(value.toLowerCase())
           )
         : originalUserChats
     );
   };
 
   return (
-    <div
-      className={cls(
-        'flex',
-        'w-full',
-        'justify-center',
-        'border-b-[1px]',
-        'border-gray-200',
-        'p-[1.36rem]'
-      )}
-    >
+    <div className="flex w-full justify-center border-b-[1px] border-gray-200 p-[1.20rem]">
       <Tooltip text="close sidebar">
         <button
-          className={cls(
-            'mr-4',
-            'rotate-180',
-            'rounded-lg',
-            'border',
-            'border-gray-300',
-            'bg-gray-200',
-            'p-2',
-            'text-gray-700',
-            'lg:hidden'
-          )}
+          className="mr-4 rotate-180 rounded-lg border border-gray-300 bg-gray-200 p-2 text-gray-700 lg:hidden"
           onClick={() => setIsOpen(false)}
         >
           <FaXmark size={24} />
@@ -66,16 +47,7 @@ const SidebarHeader = ({
       </Tooltip>
       <Tooltip text="Logout">
         <button
-          className={cls(
-            'mr-4',
-            'rotate-180',
-            'rounded-lg',
-            'border',
-            'border-gray-300',
-            'bg-gray-200',
-            'p-2',
-            'text-gray-700'
-          )}
+          className="mr-4 rotate-180 rounded-lg border border-gray-300 bg-gray-200 p-2 text-gray-700"
           onClick={handleLogoutChange}
         >
           <FaSignOutAlt size={24} />
@@ -83,15 +55,7 @@ const SidebarHeader = ({
       </Tooltip>
       <Tooltip text="Add Chat">
         <button
-          className={cls(
-            'mr-4',
-            'rounded-lg',
-            'border',
-            'border-gray-300',
-            'bg-gray-200',
-            'p-2',
-            'text-gray-700'
-          )}
+          className="mr-4 rounded-lg border border-gray-300 bg-gray-200 p-2 text-gray-700"
           onClick={openModal}
         >
           <FaPlus size={24} />

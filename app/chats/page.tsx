@@ -8,21 +8,17 @@ import ChatHeader from '@/app/components/chat/ChatHeader';
 import ChatBody from '@/app/components/chat/ChatBody';
 import ChatForm from '@/app/components/chat/ChatForm';
 import ChatPlaceholder from '../components/chat/ChatPlaceholder';
-import { io, Socket } from 'socket.io-client';
 import { v4 as uuidv4 } from 'uuid';
 import { useGetUsers } from '@/context/UsersContext';
+import { useSocket } from '@/context/SocketContext';
 
 const UserChat = () => {
   const { chat } = useCurrentChat();
   const [messageBody, setMessageBody] = useState('');
   const [chatMessages, setChatMessages] = useState<any[]>([]);
+  const { socket } = useSocket();
   const { user } = useAuth();
   const { users } = useGetUsers();
-  const socketRef = useRef<Socket<any> | null>(null);
-
-  if (!socketRef.current) {
-    socketRef.current = io(process.env.NEXT_PUBLIC_API_URL!);
-  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,10 +31,10 @@ const UserChat = () => {
       body: messageBody,
     };
 
-    socketRef.current?.emit('sendMessage', { messageObject });
+    socket?.emit('sendMessage', { messageObject });
 
-    // @ts-ignore
     sendMessage(messageObject);
+    setChatMessages((prev) => [...prev, messageObject]);
     setMessageBody('');
   };
 
@@ -54,18 +50,16 @@ const UserChat = () => {
   }, [chat?.id]);
 
   useEffect(() => {
-    const socket = io(process.env.NEXT_PUBLIC_API_URL!);
+    socket?.emit('joinChat', chat?.id);
 
-    socket.emit('joinChat', chat?.id);
-
-    socket.on('messageReceived', (data) => {
+    socket?.on('messageReceived', (data: any) => {
       setChatMessages((prevMessages) => [...prevMessages, data]);
     });
 
     return () => {
-      socket.off('messageReceived');
+      socket?.off('messageReceived');
     };
-  }, [chat]);
+  }, [chat, socket]);
 
   return chat ? (
     <div className="flex h-full w-full flex-col">

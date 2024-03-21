@@ -52,14 +52,10 @@ const ChatsLayout: React.FC<{ children?: React.ReactNode }> = ({
         ...chatName,
         required: false,
       });
-      await createNewChat(
-        // @ts-ignore
-        [...selectedUsers, user!.id]
-      );
+      await createNewChat([...selectedUsers]);
     } else {
       setChatName({ ...chatName, required: true });
-      // @ts-ignore
-      await createNewChat([...selectedUsers, user!.id], chatName.value);
+      await createNewChat([...selectedUsers], chatName.value);
     }
     setSelectedUsers([]);
     setIsModalOpen(false);

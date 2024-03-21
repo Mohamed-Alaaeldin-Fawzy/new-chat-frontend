@@ -16,9 +16,9 @@ export const uploadImage = async (file: any) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
 
-    return await response.json(); // Converts the response to JSON and returns it
+    return await response.json();
   } catch (error) {
     console.error('Upload failed:', error);
-    throw error; // Re-throw to handle the error where the function is called
+    throw error;
   }
 };

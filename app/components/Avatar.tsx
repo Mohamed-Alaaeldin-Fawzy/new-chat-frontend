@@ -12,12 +12,6 @@ const Avatar = ({ imgUrl }: { imgUrl: any }) => {
         width={60}
         height={60}
       />
-      <div
-        className={cls(
-          'absolute bottom-1 right-4 h-3 w-3 rounded-full',
-          'bg-green-500'
-        )}
-      ></div>
     </div>
   );
 };

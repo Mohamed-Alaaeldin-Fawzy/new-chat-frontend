@@ -4,8 +4,8 @@ import { generateRandomNumber } from '../helpers/generateRandomId';
 
 interface Message {
   body: string;
-  senderId: string;
-  chatId: string;
+  senderId?: string;
+  chatId?: string;
 }
 export const sendMessage = async (message: Message) => {
   return await handleApi(

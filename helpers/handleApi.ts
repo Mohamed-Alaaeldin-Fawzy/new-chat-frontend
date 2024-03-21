@@ -33,7 +33,7 @@ export const handleApi = async (
     }
 
     return data;
-  } catch (error) {
-    console.log(error);
+  } catch (error: any) {
+    throw new Error(error.message);
   }
 };

@@ -1,3 +1,21 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.drawer {
+  position: fixed;
+  left: -100%; /* Start off screen */
+  top: 0;
+  width: 300px; /* Adjust based on your design */
+  height: 100vh;
+  transition: left 0.3s;
+  background: #fff;
+}
+
+.drawer-open {
+  left: 0; /* Slide in */
+}
+
+.drawer-closed {
+  left: -100%; /* Slide out */
+}
